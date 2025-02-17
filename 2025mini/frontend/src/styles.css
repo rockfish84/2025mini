@@ -35,9 +35,9 @@ html, body {
 
 /* ✅ 입력 필드 공통 스타일 */
 .register-input, .login-input {
-  width: 100%;  /* 동일한 크기 유지 */
-  max-width: 350px; /* 최대 너비 */
-  height: 50px; /* 동일한 높이 */
+  width: 100%;
+  max-width: 350px;
+  height: 50px;
   padding: 12px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -46,6 +46,20 @@ html, body {
   box-sizing: border-box;
   display: block;
   text-align: center;
+  color: #333; /* 🔥 글자 색상을 검은색으로 설정 */
+  background-color: #fff; /* 🔥 배경 색상 */
+}
+
+/* ✅ 비밀번호 필드 스타일 수정 */
+/* 기타 전역 스타일 */
+
+@layer overrides {
+  input[type="password"] {
+    color: #000 !important;
+    background-color: #fff !important;
+    text-shadow: none !important;
+    -webkit-text-security: disc !important;
+  }
 }
 
 /* ✅ 버튼 스타일 */
@@ -93,11 +107,10 @@ html, body {
 }
 
 body {
-    font-family: 'Jeju Gothic', sans-serif;
-  }
-  
-  /* ✅ Navbar 폰트 Arial로 설정 */
+  font-family: 'Jeju Gothic', sans-serif;
+}
+
+/* ✅ Navbar 폰트 Arial로 설정 */
 nav {
-    font-family: 'Arial', sans-serif;
-  }
-  
+  font-family: 'Arial', sans-serif;
+}

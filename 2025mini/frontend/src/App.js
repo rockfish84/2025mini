@@ -8,11 +8,20 @@ import History from "./pages/History";
 import Creators from "./pages/Creators";
 import Ranking from "./pages/Ranking";
 import MyPage from "./pages/MyPage"; 
-import Problem from "./pages/Problem";
 import NotFound from "./pages/NotFound";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import VerifyEmail from "./components/VerifyEmail";  // 이메일 인증 라우트 추가
+import VerifyEmail from "./components/VerifyEmail";
+import Clear from "./pages/Clear";  // 클리어 페이지
+
+import Example from "./pages/problem/Example";
+import Even from "./pages/problem/Even";
+import Littlebiggerstar from "./pages/problem/Littlebiggerstar";
+import Recruting from "./pages/problem/Recruting";
+import Wellseen from "./pages/problem/Wellseen";
+import Introduce from "./pages/problem/Introduce";
+import Gohome from "./pages/problem/Gohome";
+import Timerun from "./pages/problem/Timerun";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -20,7 +29,7 @@ function App() {
   useEffect(() => {
     const storedUser = localStorage.getItem("token");
     if (storedUser) {
-      setUser(storedUser);  // JWT 토큰이 있으면 로그인된 상태로 표시
+      setUser(storedUser);
     }
   }, []);
 
@@ -34,11 +43,22 @@ function App() {
         <Route path="/history" element={<History />} />
         <Route path="/creators" element={<Creators />} />
         <Route path="/ranking" element={<Ranking />} />
-        <Route path="/problem" element={<Problem />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/clear" element={<Clear />} />
+        
+        {/* 문제 페이지 라우팅 */}
+        <Route path="/problem/example" element={<Example />} />
+        <Route path="/problem/even" element={<Even />} />
+        <Route path="/problem/littlebiggerstar" element={<Littlebiggerstar />} />
+        <Route path="/problem/recruting" element={<Recruting />} />
+        <Route path="/problem/wellseen" element={<Wellseen />} />
+        <Route path="/problem/introduce" element={<Introduce />} />
+        <Route path="/problem/gohome" element={<Gohome />} />
+        <Route path="/problem/timerun" element={<Timerun />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

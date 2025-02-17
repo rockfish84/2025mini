@@ -6,10 +6,8 @@ const Creators = () => {
       <div className="text-center">
         <h2 className="text-3xl font-bold my-6">제작자들</h2>
         <p className="text-gray-700">
-          이 게임은 다음 제작자들에 의해 만들어졌습니다. <br />
           <br />
           <br />
-          
           <h3 className="text-2xl font-bold mt-6">시나리오</h3>
           <br />
           <p>양재빈 (12.5기) </p>

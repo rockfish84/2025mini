@@ -1,31 +1,48 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(""); // 로그인 메시지
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login", 
+        "http://localhost:5000/api/login",
         { username, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
-      // 로그인 성공 시 토큰을 localStorage에 저장
-      localStorage.setItem("token", response.data.token);  // 로그인 후 토큰 저장
-      setMessage("로그인 성공!");
-      
-      // 페이지 새로고침 후 홈페이지로 리디렉션
-      window.location.reload();  // 페이지 새로고침
-      window.location.href = "/";  // 홈페이지로 리디렉션
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token); // JWT 저장
 
+        // 🔥 JWT 디코딩 후 userId 확인
+        try {
+          const decodedToken = JSON.parse(atob(response.data.token.split(".")[1]));
+          
+          if (!decodedToken.userId) {
+            console.error("🚨 JWT에서 userId를 찾을 수 없음");
+            setMessage("로그인 실패: 사용자 정보가 올바르지 않습니다.");
+            return;
+          }
+
+          setMessage("로그인 성공!");
+          navigate("/"); // 홈으로 이동
+          window.location.reload();
+        } catch (decodeError) {
+          console.error("🚨 JWT 디코딩 오류:", decodeError);
+          setMessage("로그인 실패: JWT 오류 발생");
+        }
+      } else {
+        setMessage("로그인 실패: 토큰이 없습니다.");
+      }
     } catch (error) {
+      console.error("🚨 로그인 요청 오류:", error);
       setMessage(error.response?.data?.message || "로그인 실패");
     }
   };
@@ -34,7 +51,7 @@ const Login = () => {
     <div className="login-container">
       <h2 className="login-title">로그인</h2>
 
-      {message && <p className="error-message">{message}</p>}  {/* 로그인 메시지 */}
+      {message && <p className="error-message">{message}</p>}
 
       <form onSubmit={handleLogin} className="login-form">
         <label className="login-label">아이디</label>
@@ -48,7 +65,7 @@ const Login = () => {
 
         <label className="login-label">비밀번호</label>
         <input
-          type="password"
+          type="text"
           placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
