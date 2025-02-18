@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../../components/PageLayout";
+import littleBiggerstarImg from "../../assets/littlebiggerstar.png";
+
 
 const Littlebiggerstar = () => {
   const [answer, setAnswer] = useState("");
@@ -34,7 +36,6 @@ const Littlebiggerstar = () => {
       console.log("📩 서버 응답:", response.data);
 
       if (response.data.isCorrect === true) {
-
         // ✅ 토큰 가져오기
         const token = localStorage.getItem("token");
         if (!token) {
@@ -52,7 +53,7 @@ const Littlebiggerstar = () => {
         );
 
         if (updateResponse.data.token) {
-          localStorage.setItem("token", updateResponse.data.token); // ✅ 새로운 JWT 저장
+          localStorage.setItem("token", updateResponse.data.token); // 새로운 JWT 저장
         }
 
         setTimeout(() => {
@@ -69,27 +70,64 @@ const Littlebiggerstar = () => {
 
   return (
     <PageLayout>
-      <div className="flex flex-col items-center justify-center text-center">
-        <h2 className="text-3xl font-bold my-6">Little Bigger Star</h2>
-        <img 
-          src="/path/to/problem-image.jpg" 
-          alt="결혼반지 이미지" 
-          className="w-full max-w-xs my-4"
-        />
-        <p className="text-gray-700 my-6">
-          산발처럼 흐트러진 옷들이 군데군데 놓여 있었다.<br/>
-          수많은 장면을 머릿속에 되새기며 작은 방안을 떠돌았다.<br/>
-          보석상의 바쁜 손끝에 의해 엮여진 그 몇몇의 구석들을 떠올렸다.<br/><br/>
-          12년을 더 하던지, 아니면 내일 이 세상에서 없을까...
-        </p>
+      <div className="flex flex-col items-center text-center" style={{ marginTop: "2rem" }}>
+        
+        {/* 스토리 부분: 회색 박스 + 큰 글씨 + 여백 */}
+        <div
+          className="bg-gray-200 text-xl p-4 mb-6"
+          style={{ maxWidth: "600px", marginTop: "3rem" }}
+        >
+          <p>
+            퍼플이는 언제나 퍼즐 생각만 한답니다.
+            <br />
+            일어날 때도, 씻을 때도, 공부할 때도…
+            <br />
+            그리고 밥을 먹을 때도 말이죠!
+            <br /><br />
+            마침 퍼플이도 배가 고프다네요!
+            <br /> 
+            요즘 KAIST 새내기들은 어디서 밥을 먹더라…?
+          </p>
+        </div>
+        <br />
+        <br />
+        <br />
 
+        {/* 문제 제목 */}
+        <h2 className="text-3xl font-bold my-4">Little Bigger Star</h2>
+
+        {/* 문제 (사진) */}
+        <div
+          className="text-gray-700 my-6"
+          style={{ maxWidth: "600px", textAlign: "center" }}
+        >
+          {/* 사진 */}
+          <img 
+            src={littleBiggerstarImg}
+            alt="Little Bigger Star 문제 이미지"
+            className="my-4 scale-130 origin-center"
+          />
+        </div>
+
+        {/* 정답 입력 폼 */}
         <form onSubmit={handleSubmit} className="mt-6">
-          <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)}
-            className="border p-2 rounded-md" placeholder="정답을 입력하세요" />
-          <button type="submit" className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md">제출</button>
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            className="border p-2 rounded-md"
+            placeholder="정답을 입력하세요"
+          />
+          <button
+            type="submit"
+            className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md"
+          >
+            제출
+          </button>
         </form>
 
-        {message && <p className="mt-4">{message}</p>}
+        {/* 메시지 표시 */}
+        {message && <p className="mt-4 text-red-600">{message}</p>}
       </div>
     </PageLayout>
   );

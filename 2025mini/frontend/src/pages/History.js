@@ -12,12 +12,12 @@ const History = () => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
       console.warn("🔒 로그인 필요: 로그인 페이지로 이동");
-      navigate("/login"); // 로그인 안 되어 있으면 로그인 페이지로 리디렉트
+      navigate("/login");
       return;
     }
 
     try {
-      const userData = JSON.parse(atob(storedToken.split(".")[1])); // JWT 토큰에서 payload 추출
+      const userData = JSON.parse(atob(storedToken.split(".")[1]));
       if (!userData?.userId) {
         console.error("🚨 userId 없음, 로그인 페이지로 이동");
         navigate("/login");
@@ -32,7 +32,7 @@ const History = () => {
         .then((res) => {
           const { currentProblemId } = res.data;
 
-          // 사용자가 푼 문제 리스트 가져오기
+          // 사용자가 푼 문제 리스트
           const problems = [
             { problemId: 1, title: "복면산?", path: "/problem/example" },
             { problemId: 2, title: "이븐한 식사", path: "/problem/even" },
@@ -48,7 +48,7 @@ const History = () => {
         })
         .catch((error) => {
           console.error("🚨 사용자 정보 로드 오류:", error);
-          navigate("/login"); // 오류 발생 시 로그인 페이지로 이동
+          navigate("/login");
         });
     } catch (error) {
       console.error("🚨 JWT 파싱 오류:", error);
@@ -64,8 +64,12 @@ const History = () => {
           {history.length > 0 ? (
             <ul>
               {history.map((item) => (
-                <li key={item.problemId}>
-                  <Link to={item.path} className="text-black-500 hover:text-blue-700">
+                <li key={item.problemId} className="mb-2">
+                  {/* 🔥 문제 제목 크게 표시 */}
+                  <Link
+                    to={item.path}
+                    className="text-xl font-semibold text-black hover:text-blue-700"
+                  >
                     문제 {item.problemId}: {item.title}
                   </Link>
                 </li>

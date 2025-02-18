@@ -11,10 +11,17 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // 🔥 로딩 상태 추가
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // 🔥 회원가입 요청 시작 → loading = true
+    setLoading(true);
+    setMessage("");
 
     try {
       const response = await axios.post("http://localhost:5000/api/register", {
@@ -24,16 +31,18 @@ const Register = () => {
         confirmPassword,
       });
 
-      // 회원가입 후 현재 푸는 문제 id 확인 및 리디렉션 처리
       localStorage.setItem("currentProblemId", 1);
 
       setMessage(response.data.message);
 
       setTimeout(() => {
-        navigate("/login"); // 회원가입 후 3초 뒤 로그인 페이지로 이동
+        navigate("/login");
       }, 3000);
     } catch (error) {
       setMessage(error.response?.data?.message || "회원가입 실패");
+    } finally {
+      // 🔥 요청 완료 후 → loading = false
+      setLoading(false);
     }
   };
 
@@ -51,6 +60,9 @@ const Register = () => {
 
       {/* 회원가입 성공/실패 메시지 */}
       {message && <p className="success-message">{message}</p>}
+
+      {/* 로딩 중인 경우 “대기중...” 표시 */}
+      {loading && <p className="success-message">대기중...</p>}
 
       <form onSubmit={handleRegister} className="register-form">
         <label className="register-label">아이디</label>
@@ -72,7 +84,6 @@ const Register = () => {
         />
 
         <label className="register-label">비밀번호</label>
-        {/* 비밀번호 입력 필드 + 버튼 */}
         <div style={{ position: "relative" }}>
           <input
             type={showPassword ? "text" : "password"}
@@ -94,12 +105,11 @@ const Register = () => {
               fontWeight: "bold",
             }}
           >
-            {showPassword ? "👁 Hide" : "👁 Show"}
+            {showPassword ? "👁‍ Hide" : "👁 Show"}
           </button>
         </div>
 
         <label className="register-label">비밀번호 확인</label>
-        {/* 비밀번호 확인 입력 필드 + 버튼 */}
         <div style={{ position: "relative" }}>
           <input
             type={showConfirmPassword ? "text" : "password"}
@@ -121,11 +131,17 @@ const Register = () => {
               fontWeight: "bold",
             }}
           >
-            {showConfirmPassword ? "👁 Hide" : "👁 Show"}
+            {showConfirmPassword ? "👁‍ Hide" : "👁 Show"}
           </button>
         </div>
 
-        <button type="submit" className="register-button">회원가입</button>
+        <button
+          type="submit"
+          className="register-button"
+          disabled={loading} // 🔥 로딩 중이면 버튼 비활성화
+        >
+          회원가입
+        </button>
       </form>
 
       <p className="login-link">

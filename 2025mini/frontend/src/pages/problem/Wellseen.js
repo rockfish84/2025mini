@@ -34,8 +34,6 @@ const Wellseen = () => {
       console.log("📩 서버 응답:", response.data);
 
       if (response.data.isCorrect === true) {
-
-        // ✅ 토큰 가져오기
         const token = localStorage.getItem("token");
         if (!token) {
           setMessage("로그인이 필요합니다.");
@@ -45,14 +43,14 @@ const Wellseen = () => {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const userId = decodedToken.userId;
 
-        // ✅ 문제 정답 제출 후 currentProblemId 증가 + JWT 갱신
+        // 문제 정답 제출 후 currentProblemId 증가 + JWT 갱신
         const updateResponse = await axios.post(
           "http://localhost:5000/api/user/update-problem",
           { userId }
         );
 
         if (updateResponse.data.token) {
-          localStorage.setItem("token", updateResponse.data.token); // ✅ 새로운 JWT 저장
+          localStorage.setItem("token", updateResponse.data.token);
         }
 
         setTimeout(() => {
@@ -69,27 +67,65 @@ const Wellseen = () => {
 
   return (
     <PageLayout>
-      <div className="flex flex-col items-center justify-center text-center">
-        <h2 className="text-3xl font-bold my-6">이거 어디서 많이 봤는데</h2>
-        <img 
-          src="/path/to/problem-image.jpg" 
-          alt="결혼반지 이미지" 
-          className="w-full max-w-xs my-4"
-        />
-        <p className="text-gray-700 my-6">
-          산발처럼 흐트러진 옷들이 군데군데 놓여 있었다.<br/>
-          수많은 장면을 머릿속에 되새기며 작은 방안을 떠돌았다.<br/>
-          보석상의 바쁜 손끝에 의해 엮여진 그 몇몇의 구석들을 떠올렸다.<br/><br/>
-          12년을 더 하던지, 아니면 내일 이 세상에서 없을까...
-        </p>
+      <div className="flex flex-col items-center text-center" style={{ marginTop: "2rem" }}>
+        
+        {/* 스토리 부분: 회색 박스 + 큰 글씨 + 여백 */}
+        <div
+          className="bg-gray-200 text-xl p-4 mb-6"
+          style={{ maxWidth: "600px", marginTop: "3rem" }}
+        >
+          <p>
+            아직 테스트는 끝나지 않았다!
+            <br />
+            포스터를 봤다고 Puple에 대한 사랑을 어필할 수 있을 줄 알았나요?
+            <br />
+            Puple 부원이 되려면 이 정도로는 부족하다고요!
+          </p>
+        </div>
+        <br /><br /><br />
 
+        {/* 문제 제목 */}
+        <h2 className="text-3xl font-bold my-6">이거 어디서 많이 봤는데</h2>
+   
+        {/* 문제(사진 두 개) */}
+        <div
+          className="text-gray-700 my-6"
+          style={{ maxWidth: "600px", textAlign: "center" }}
+        >
+          {/* 첫 번째 사진 */}
+          <img 
+            src="/images/problem1.png"  // 예시 경로
+            alt="문제 이미지 1"
+            className="w-full max-w-xs my-4"
+          />
+
+          {/* 두 번째 사진 */}
+          <img 
+            src="/images/problem2.png"  // 예시 경로
+            alt="문제 이미지 2"
+            className="w-full max-w-xs my-4"
+          />
+        </div>
+
+        {/* 정답 입력 폼 */}
         <form onSubmit={handleSubmit} className="mt-6">
-          <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)}
-            className="border p-2 rounded-md" placeholder="정답을 입력하세요" />
-          <button type="submit" className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md">제출</button>
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            className="border p-2 rounded-md"
+            placeholder="정답을 입력하세요"
+          />
+          <button
+            type="submit"
+            className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md"
+          >
+            제출
+          </button>
         </form>
 
-        {message && <p className="mt-4">{message}</p>}
+        {/* 메시지 표시 */}
+        {message && <p className="mt-4 text-red-600">{message}</p>}
       </div>
     </PageLayout>
   );
