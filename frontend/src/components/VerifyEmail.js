@@ -10,7 +10,7 @@ const VerifyEmail = () => {
     const token = new URLSearchParams(window.location.search).get("token");
 
     if (token) {
-      axios.get(`https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/verify-email?token=${token}`)
+      axios.get(`http://localhost:5000/api/verify-email?token=${token}`)
         .then((response) => {
           // 인증이 완료되었으면 백엔드에서 리디렉션을 처리하기 때문에 별도 메시지 처리 필요 없음
           setMessage(response.data.message); // 여기에서 로그인 페이지로 이동하는 메시지만 보여줍니다.

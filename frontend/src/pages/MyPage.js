@@ -29,7 +29,7 @@ const MyPage = () => {
       }
 
       axios
-        .get(`https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/${decodedToken.userId}`)
+        .get(`http://localhost:5000/api/user/${decodedToken.userId}`)
         .then((res) => {
           setUser(res.data);
         })
@@ -56,7 +56,7 @@ const MyPage = () => {
     if (!confirmReset) return;
 
     try {
-      await axios.post("https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/reset", { userId: user._id });
+      await axios.post("http://localhost:5000/api/user/reset", { userId: user._id });
       alert("✅ 계정이 초기화되었습니다. 다시 로그인해주세요.");
       handleLogout();
     } catch (error) {
@@ -81,7 +81,7 @@ const MyPage = () => {
     }
 
     try {
-      const response = await axios.post("https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/change-password", {
+      const response = await axios.post("http://localhost:5000/api/user/change-password", {
         userId: user._id,
         currentPassword,
         newPassword,
@@ -115,7 +115,7 @@ const MyPage = () => {
 
     try {
       const response = await axios.post(
-        "https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/password-reset-request",
+        "http://localhost:5000/api/password-reset-request",
         { email },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );

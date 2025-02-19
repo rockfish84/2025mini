@@ -34,7 +34,7 @@ const Recruting = () => {
       const userId = decodedToken.userId;
 
       const response = await axios.post(
-        "https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/problem/submit",
+        "http://localhost:5000/api/problem/submit",
         { answer, problemId: 4, userId },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -44,7 +44,7 @@ const Recruting = () => {
       if (response.data.isCorrect === true) {
 
         const updateResponse = await axios.post(
-          "https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/update-problem",
+          "http://localhost:5000/api/user/update-problem",
           { userId }
         );
 

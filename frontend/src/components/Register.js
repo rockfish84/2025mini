@@ -18,7 +18,7 @@ const Register = () => {
     setMessage("");
 
     try {
-      const response = await axios.post("https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/register", {
+      const response = await axios.post("z/api/register", {
         username,
         email,
         password,
