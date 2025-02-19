@@ -39,7 +39,7 @@ const Creators = () => {
     if (user?.userId) {
       // 유저 정보 API 호출해서 currentProblemId 가져오기 (예시)
       axios
-        .get(`http://localhost:5000/api/user/${user.userId}`)
+        .get(`https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/${user.userId}`)
         .then((res) => {
           const { currentProblemId } = res.data;
           // currentProblemId까지만 필터

@@ -25,7 +25,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/reset-password", { token, newPassword });
+      const response = await axios.post("https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/reset-password", { token, newPassword });
       setMessage(response.data.message);
       
       setTimeout(() => {

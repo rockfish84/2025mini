@@ -35,7 +35,7 @@ const Timerun = () => {
       const userId = decodedToken.userId;
 
       const response = await axios.post(
-        "http://localhost:5000/api/problem/submit",
+        "https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/problem/submit",
         { answer, problemId: 8, userId },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -45,7 +45,7 @@ const Timerun = () => {
       if (response.data.isCorrect === true) {
 
         const updateResponse = await axios.post(
-          "http://localhost:5000/api/user/update-problem",
+          "https://port-0-mini-2025-m7c2eilx1e9c2c93.sel4.cloudtype.app/api/user/update-problem",
           { userId }
         );
 
