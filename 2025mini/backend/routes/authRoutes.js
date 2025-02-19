@@ -153,30 +153,45 @@ router.post("/user/reset", async (req, res) => {
   }
 });
 
+// 비밀번호 찾기 요청 API (이메일 전송)
 // ✅ 비밀번호 찾기 요청 API (이메일 전송)
 router.post("/password-reset-request", async (req, res) => {
   const { email } = req.body;
+  const token = req.headers.authorization?.split(" ")[1]; // JWT 토큰 가져오기
 
-  if (!email) {
-    return res.status(400).json({ message: "이메일을 입력하세요." });
+  if (!token) {
+    return res.status(401).json({ message: "인증되지 않은 요청입니다." });
   }
 
   try {
-    const user = await User.findOne({ email });
+    // 1) JWT 토큰 검증
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
 
+    // 2) 사용자가 존재하는지 확인
     if (!user) {
-      return res.status(400).json({ message: "해당 이메일로 등록된 계정이 없습니다." });
+      return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    // 3) 현재 로그인된 사용자의 이메일과 입력한 이메일이 같은지 확인
+    if (user.email !== email) {
+      return res.status(403).json({ message: "현재 로그인된 이메일과 일치하지 않습니다." });
+    }
 
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    // 4) 비밀번호 재설정 링크 생성 및 이메일 발송
+    const resetToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "비밀번호 재설정 요청",
-      html: `<h3>2025 동박 미니 미궁입니다. 비밀번호를 재설정하려면 아래 링크를 클릭하세요:</h3>
+      html: `<h3>비밀번호를 재설정하려면 아래 링크를 클릭하세요:</h3>
              <a href="${resetLink}">비밀번호 재설정</a>`,
     };
 
@@ -189,7 +204,8 @@ router.post("/password-reset-request", async (req, res) => {
   }
 });
 
-// ✅ 비밀번호 재설정 (Reset Password)
+
+// 비밀번호 재설정 (Reset Password)
 router.post("/reset-password", async (req, res) => {
   const { token, newPassword } = req.body;
 
@@ -198,22 +214,28 @@ router.post("/reset-password", async (req, res) => {
   }
 
   try {
+    // 1) 토큰 검증
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    //    토큰에서 userId와 email을 추출
 
+    // 2) userId와 email이 모두 일치하는 사용자 찾기
+    const user = await User.findOne({ _id: decoded.userId, email: decoded.email });
     if (!user) {
       return res.status(400).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
+    // 3) 새 비밀번호 해싱 후 저장
     user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
   } catch (error) {
     console.error("🚨 비밀번호 변경 오류:", error);
-    res.status(500).json({ message: "서버 오류 발생" });
+    // 토큰이 만료되었거나 잘못된 경우도 여기서 잡힘
+    res.status(400).json({ message: "유효하지 않은 또는 만료된 토큰입니다." });
   }
 });
+
 
 
 // ✅ 비밀번호 변경 API

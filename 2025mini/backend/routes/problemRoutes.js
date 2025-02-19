@@ -29,8 +29,8 @@ router.post("/add-problems", async (req, res) => {
       { title: "Little Bigger Star", correctAnswer: "animal", problemId: 3 },
       { title: "리크루팅 대모험", correctAnswer: "우주최고세계제일", problemId: 4 },
       { title: "이거 어디서 많이 봤는데", correctAnswer: "we invite u", problemId: 5 },
-      { title: "자기소개 퍼플 방탈출", correctAnswer: "자기소개 퍼플 방탈출", problemId: 6 },
-      { title: "집에 가는 길", correctAnswer: "easy", problemId: 7 },
+      { title: "자기소개 퍼플 방탈출", correctAnswer: "퍼플 방탈출", problemId: 6 },
+      { title: "집에 가는 길", correctAnswer: "world", problemId: 7 },
       { title: "시간을 달려서 @kaist_puple", correctAnswer: "tiny", problemId: 8 },
     ];
   

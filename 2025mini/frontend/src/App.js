@@ -22,7 +22,6 @@ import Wellseen from "./pages/problem/Wellseen";
 import Introduce from "./pages/problem/Introduce";
 import Gohome from "./pages/problem/Gohome";
 import Timerun from "./pages/problem/Timerun";
-import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/clear" element={<Clear />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
         

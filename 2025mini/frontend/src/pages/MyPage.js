@@ -11,6 +11,7 @@ const MyPage = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -105,11 +106,25 @@ const MyPage = () => {
       return;
     }
 
+    if (!user || user.email !== email) {
+      setMessage("❌ 현재 로그인된 이메일과 일치하지 않습니다.");
+      return;
+    }
+
+    setIsLoading(true); // ⏳ 로딩 상태 시작
+
     try {
-      const response = await axios.post("http://localhost:5000/api/password-reset-request", { email });
+      const response = await axios.post(
+        "http://localhost:5000/api/password-reset-request",
+        { email },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
+
       setMessage("📩 " + response.data.message);
     } catch (error) {
       setMessage("❌ " + (error.response?.data?.message || "비밀번호 찾기 중 오류가 발생했습니다."));
+    } finally {
+      setIsLoading(false); // ⏳ 로딩 상태 종료
     }
   };
 
@@ -199,8 +214,9 @@ const MyPage = () => {
             <button
               onClick={handleForgotPassword}
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full"
+              disabled={isLoading} // ⏳ 로딩 중이면 버튼 비활성화
             >
-              이메일로 비밀번호 재설정 링크 보내기
+              {isLoading ? "📨 대기 중..." : "📩 이메일로 비밀번호 재설정 링크 보내기"}
             </button>
             <button
               onClick={() => setShowForgotPassword(false)}
