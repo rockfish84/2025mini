@@ -39,7 +39,7 @@ const History = () => {
             { problemId: 3, title: "Little Bigger Star", path: "/problem/littlebiggerstar" },
             { problemId: 4, title: "리크루팅 대모험", path: "/problem/recruting" },
             { problemId: 5, title: "이거 어디서 많이 봤는데", path: "/problem/wellseen" },
-            { problemId: 6, title: "자기소개 퍼플 방탈출", path: "/problem/introduce" },
+            { problemId: 6, title: "자기소개", path: "/problem/introduce" },
             { problemId: 7, title: "집에 가는 길", path: "/problem/gohome" },
             { problemId: 8, title: "시간을 달려서 @kaist_puple", path: "/problem/timerun" },
           ].filter((problem) => problem.problemId <= currentProblemId);
@@ -63,9 +63,8 @@ const History = () => {
         <div className="text-gray-700">
           {history.length > 0 ? (
             <ul>
-              {history.map((item) => (
-                <li key={item.problemId} className="mb-2">
-                  {/* 🔥 문제 제목 크게 표시 */}
+              {history.map((item, index) => (
+                <li key={item.problemId} className="mb-4"> {/* 🔥 문제 간 여백 추가 */}
                   <Link
                     to={item.path}
                     className="text-xl font-semibold text-black hover:text-blue-700"

@@ -12,8 +12,8 @@ const Creators = () => {
     { problemId: 2, info: "이븐한 식사 - 나인석 (12기)" },
     { problemId: 3, info: "Little Bigger Star - 나인석 (12기)" },
     { problemId: 4, info: "리크루팅 대모험 - 김정훈 (13기)" },
-    { problemId: 5, info: "이거 어디서 많이 봤는데 - 양재빈 (12.5기)" },
-    { problemId: 6, info: "자기소개 - 양재빈 (12.5기)" },
+    { problemId: 5, info: "이거 어디서 많이 봤는데 - 양재빈 (12기)" },
+    { problemId: 6, info: "자기소개 - 양재빈 (12기)" },
     { problemId: 7, info: "집에 가는 길 - 김정훈 (13기)" },
     { problemId: 8, info: "시간을 달려서 @kaist_puple - 김정훈 (13기)" },
   ];
@@ -60,12 +60,12 @@ const Creators = () => {
           <br />
           <h3 className="text-2xl font-bold mt-6">기획</h3>
           <br />
-          <p>김예환 (13기) 김정훈 (13기) 양재빈 (12.5기) 황성태 (13기)</p>
+          <p>김예환 (13기) 김정훈 (13기) 양재빈 (12기) 황성태 (13기)</p>
           <br />
           <br />
           <h3 className="text-2xl font-bold mt-6">시나리오</h3>
           <br />
-          <p>양재빈 (12.5기)</p>
+          <p>양재빈 (12기)</p>
           <br />
           <br />
 
@@ -78,7 +78,6 @@ const Creators = () => {
           <h3 className="text-2xl font-bold mt-6">문제 제작</h3>
           <br />
           <p>문제를 풀 때마다 제작자가 공개됩니다! :)</p>
-          <br />
         </p>
 
         {/* 🔥 동적으로 표시되는 문제 제작자 목록 */}

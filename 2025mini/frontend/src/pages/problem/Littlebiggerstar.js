@@ -25,35 +25,33 @@ const Littlebiggerstar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+     
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setMessage("로그인이 필요합니다.");
+        return;
+      }
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const userId = decodedToken.userId;
+
       const response = await axios.post(
         "http://localhost:5000/api/problem/submit",
-        { answer, problemId: 3 },
+        { answer, problemId: 3, userId },
         { headers: { "Content-Type": "application/json" } }
       );
 
       console.log("📩 서버 응답:", response.data);
 
       if (response.data.isCorrect === true) {
-        // ✅ 토큰 가져오기
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setMessage("로그인이 필요합니다.");
-          return;
-        }
-        
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        const userId = decodedToken.userId;
 
-        // ✅ 문제 정답 제출 후 currentProblemId 증가 + JWT 갱신
         const updateResponse = await axios.post(
           "http://localhost:5000/api/user/update-problem",
           { userId }
         );
 
         if (updateResponse.data.token) {
-          localStorage.setItem("token", updateResponse.data.token); // 새로운 JWT 저장
+          localStorage.setItem("token", updateResponse.data.token);
         }
 
         setTimeout(() => {

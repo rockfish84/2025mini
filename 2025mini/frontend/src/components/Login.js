@@ -65,7 +65,7 @@ const Login = () => {
 
         <label className="login-label">비밀번호</label>
         <input
-          type="text"
+          type="password"  /* 🔥 비밀번호 입력 필드 수정 */
           placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

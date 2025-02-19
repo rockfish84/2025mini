@@ -61,46 +61,61 @@ router.post("/add-problems", async (req, res) => {
 
     return normalizedUserAnswer === normalizedCorrectAnswer;
 };
-
 router.post("/submit", async (req, res) => {
-    const { problemId, answer } = req.body;
+  const { problemId, answer, userId } = req.body;
 
-    if (!answer) {
-        return res.status(400).json({ message: "정답을 입력하세요." });
-    }
+  if (!answer) {
+      return res.status(400).json({ message: "정답을 입력하세요." });
+  }
 
-    try {
-        const problem = await Problem.findOne({ problemId: Number(problemId) });
+  try {
+      const user = await User.findById(userId);
 
-        if (!problem) {
-            return res.status(400).json({ message: "문제를 찾을 수 없습니다." });
-        }
+      if (!user) {
+          return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+      }
 
-        if (!problem.correctAnswer) {
-            return res.status(500).json({ message: "정답 정보가 없습니다." });
-        }
+      const problem = await Problem.findOne({ problemId: Number(problemId) });
 
-        const isCorrect = compareAnswer(answer, problem.correctAnswer);
+      if (!problem) {
+          return res.status(400).json({ message: "문제를 찾을 수 없습니다." });
+      }
 
-        console.log(`✅ 정답 확인됨: ${isCorrect ? "맞음" : "틀림"}`);
+      if (!problem.correctAnswer) {
+          return res.status(500).json({ message: "정답 정보가 없습니다." });
+      }
 
-        if (isCorrect) {
-            return res.status(200).json({ 
-                message: "정답입니다!", 
-                isCorrect: true,  // ✅ 정답 여부 명확히 반환
-                nextProblemId: problemId + 1 
-            });
-        } else {
-            return res.status(400).json({ 
-                message: "정답이 틀렸습니다.", 
-                isCorrect: false  // ❌ 틀렸을 경우 false 명확히 반환
-            });
-        }
-    } catch (error) {
-        console.error("🚨 정답 제출 오류:", error);
-        res.status(500).json({ message: "서버 오류가 발생했습니다." });
-    }
+      const isCorrect = compareAnswer(answer, problem.correctAnswer);
+
+      console.log(`✅ 정답 확인됨: ${isCorrect ? "맞음" : "틀림"}`);
+
+      if (isCorrect) {
+          let updatedProblemId = user.currentProblemId;
+
+          // ✅ 사용자의 현재 문제 ID가 제출된 문제 ID와 같다면 1 증가
+          if (user.currentProblemId === problemId) {
+              updatedProblemId += 1;
+              user.currentProblemId = updatedProblemId;
+              await user.save();
+          }
+
+          return res.status(200).json({
+              message: "정답입니다!",
+              isCorrect: true,
+              nextProblemId: updatedProblemId,
+          });
+      } else {
+          return res.status(400).json({
+              message: "정답이 틀렸습니다.",
+              isCorrect: false,
+          });
+      }
+  } catch (error) {
+      console.error("🚨 정답 제출 오류:", error);
+      res.status(500).json({ message: "서버 오류가 발생했습니다." });
+  }
 });
+
 
 router.get("/problems/history", async (req, res) => {
     const maxProblemId = parseInt(req.query.maxProblemId, 10);

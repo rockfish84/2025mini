@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../../components/PageLayout";
+import WellSeen1 from "../../assets/wellseen1.png";
+import WellSeen2 from "../../assets/wellseen2.png";
+
 
 const Wellseen = () => {
   const [answer, setAnswer] = useState("");
@@ -23,27 +26,26 @@ const Wellseen = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+     
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setMessage("로그인이 필요합니다.");
+        return;
+      }
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const userId = decodedToken.userId;
+
       const response = await axios.post(
         "http://localhost:5000/api/problem/submit",
-        { answer, problemId: 5 },
+        { answer, problemId: 5, userId },
         { headers: { "Content-Type": "application/json" } }
       );
 
       console.log("📩 서버 응답:", response.data);
 
       if (response.data.isCorrect === true) {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setMessage("로그인이 필요합니다.");
-          return;
-        }
-        
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        const userId = decodedToken.userId;
 
-        // 문제 정답 제출 후 currentProblemId 증가 + JWT 갱신
         const updateResponse = await axios.post(
           "http://localhost:5000/api/user/update-problem",
           { userId }
@@ -75,11 +77,14 @@ const Wellseen = () => {
           style={{ maxWidth: "600px", marginTop: "3rem" }}
         >
           <p>
-            아직 테스트는 끝나지 않았다!
-            <br />
-            포스터를 봤다고 Puple에 대한 사랑을 어필할 수 있을 줄 알았나요?
-            <br />
-            Puple 부원이 되려면 이 정도로는 부족하다고요!
+            Puple에 들어가려면 몇 가지 테스트를 거쳐야 된다고 합니다!
+          <br/>
+            물론 Puple에 관심이 많은 사람일 수록
+          <br/>
+            Puple 부원이 되기에 유리하겠죠?
+          <br/>
+             과연 퍼플이는 테스트를 통과할 수 있을까요?
+
           </p>
         </div>
         <br /><br /><br />
@@ -88,22 +93,16 @@ const Wellseen = () => {
         <h2 className="text-3xl font-bold my-6">이거 어디서 많이 봤는데</h2>
    
         {/* 문제(사진 두 개) */}
-        <div
-          className="text-gray-700 my-6"
-          style={{ maxWidth: "600px", textAlign: "center" }}
-        >
-          {/* 첫 번째 사진 */}
-          <img 
-            src="/images/problem1.png"  // 예시 경로
-            alt="문제 이미지 1"
-            className="w-full max-w-xs my-4"
+        <div className="my-4" style={{ transform: "scale(1.0)", transformOrigin: "center" }}>
+          <img
+            src={WellSeen1}
+            style={{ width: "400px", height: "auto" }}
           />
-
-          {/* 두 번째 사진 */}
-          <img 
-            src="/images/problem2.png"  // 예시 경로
-            alt="문제 이미지 2"
-            className="w-full max-w-xs my-4"
+        </div>
+        <div className="my-4" style={{ transform: "scale(1.3)", transformOrigin: "center" }}>
+          <img
+            src={WellSeen2}
+            style={{ width: "400px", height: "auto" }}
           />
         </div>
 

@@ -20,8 +20,11 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-100 shadow-md px-8">
+      {/* 🔥 2025 동박 미니 미궁 클릭 시 홈페이지(/)로 이동 */}
       <div className="flex-1 text-left">
-        <h1 className="text-xl font-extrabold text-purple-700">2025 동박 미니 미궁</h1>
+        <Link to="/" className="text-xl font-extrabold text-purple-700 hover:text-purple-500">
+          2025 동박 미니 미궁
+        </Link>
       </div>
 
       <div

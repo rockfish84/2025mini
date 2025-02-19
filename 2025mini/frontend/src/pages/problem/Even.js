@@ -23,25 +23,25 @@ const Even = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+     
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setMessage("로그인이 필요합니다.");
+        return;
+      }
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const userId = decodedToken.userId;
+
       const response = await axios.post(
         "http://localhost:5000/api/problem/submit",
-        { answer, problemId: 2 },
+        { answer, problemId: 2, userId },
         { headers: { "Content-Type": "application/json" } }
       );
 
       console.log("📩 서버 응답:", response.data);
 
       if (response.data.isCorrect === true) {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setMessage("로그인이 필요합니다.");
-          return;
-        }
-        
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        const userId = decodedToken.userId;
 
         const updateResponse = await axios.post(
           "http://localhost:5000/api/user/update-problem",
@@ -49,7 +49,7 @@ const Even = () => {
         );
 
         if (updateResponse.data.token) {
-          localStorage.setItem("token", updateResponse.data.token); 
+          localStorage.setItem("token", updateResponse.data.token);
         }
 
         setTimeout(() => {

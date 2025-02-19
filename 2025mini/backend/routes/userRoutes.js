@@ -39,9 +39,6 @@ router.post("/user/update-problem", async (req, res) => {
       }
 
       // 🔥 currentProblemId 증가 (최대 8까지)
-      if (user.currentProblemId < 8) {
-        user.currentProblemId += 1;
-      }
       
       await user.save();
 

@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "회원가입 인증 메일",
-      html: `<h3>이메일 인증을 완료하려면 아래 링크를 클릭하세요:</h3>
+      html: `<h3>2025 동박 미니 미궁입니다. 이메일 인증을 완료하려면 아래 링크를 클릭하세요:</h3>
              <a href="${verificationLink}">이메일 인증하기</a>`,
     };
 
@@ -153,7 +153,7 @@ router.post("/user/reset", async (req, res) => {
   }
 });
 
-// ✅ 비밀번호 초기화 요청 API (이메일 전송)
+// ✅ 비밀번호 찾기 요청 API (이메일 전송)
 router.post("/password-reset-request", async (req, res) => {
   const { email } = req.body;
 
@@ -176,7 +176,7 @@ router.post("/password-reset-request", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "비밀번호 재설정 요청",
-      html: `<h3>비밀번호를 재설정하려면 아래 링크를 클릭하세요:</h3>
+      html: `<h3>2025 동박 미니 미궁입니다. 비밀번호를 재설정하려면 아래 링크를 클릭하세요:</h3>
              <a href="${resetLink}">비밀번호 재설정</a>`,
     };
 
@@ -189,7 +189,7 @@ router.post("/password-reset-request", async (req, res) => {
   }
 });
 
-// ✅ 비밀번호 변경 API
+// ✅ 비밀번호 재설정 (Reset Password)
 router.post("/reset-password", async (req, res) => {
   const { token, newPassword } = req.body;
 
@@ -205,7 +205,7 @@ router.post("/reset-password", async (req, res) => {
       return res.status(400).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
@@ -214,5 +214,38 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "서버 오류 발생" });
   }
 });
+
+
+// ✅ 비밀번호 변경 API
+router.post("/user/change-password", async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  if (!userId || !currentPassword || !newPassword) {
+    return res.status(400).json({ message: "모든 필드를 입력하세요." });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    }
+
+    // 기존 비밀번호 검증
+    const isPasswordCorrect = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "현재 비밀번호가 일치하지 않습니다." });
+    }
+
+    // 새로운 비밀번호 해싱 후 저장
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
+  } catch (error) {
+    console.error("🚨 비밀번호 변경 오류:", error);
+    res.status(500).json({ message: "서버 오류 발생" });
+  }
+});
+
 
 module.exports = router;
