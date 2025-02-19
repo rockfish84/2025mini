@@ -1,9 +1,10 @@
 {
-    "name": "2025mini",
-    "scripts": {
-      "install:all": "cd backend && npm install && cd ../frontend && npm install",
-      "build:all": "cd frontend && npm run build",
-      "start:backend": "cd backend && npm start"
-    }
+  "name": "my-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
-  
+}
